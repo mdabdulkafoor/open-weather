@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111827" />
+    <meta name="description" content="SkyCast — your beautifully clear window into the weather." />
+    <title>SkyCast — See Beyond the Clouds</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="weather-glow" aria-hidden="true"></div>
+    <div class="weather-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="SkyCast home">
+          <span class="brand-mark"><i data-lucide="cloud-sun"></i></span>
+          <span class="brand-name">skycast<span class="brand-dot">.</span><small>YOUR WEATHER COMPANION</small></span>
+        </a>
+        <div class="side-label">MENU</div>
+        <nav class="main-nav" aria-label="Main navigation">
+          <button class="nav-link active" data-view="home"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
+          <button class="nav-link" data-view="hourly"><i data-lucide="clock-3"></i><span>Hourly forecast</span></button>
+          <button class="nav-link" data-view="weekly"><i data-lucide="calendar-days"></i><span>5-day forecast</span></button>
+          <button class="nav-link" data-view="air"><i data-lucide="wind"></i><span>Air quality</span></button>
+          <button class="nav-link" data-view="favorites"><i data-lucide="heart"></i><span>Favorite cities</span><span id="favorite-count" class="nav-count">0</span></button>
+        </nav>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-note">
+          <span class="note-orb"><i data-lucide="sparkles"></i></span>
+          <p>Every forecast tells a story.</p>
+          <small>Let’s find yours today.</small>
+        </div>
+        <button class="nav-link settings-link" id="settings-button" data-view="settings"><i data-lucide="settings-2"></i><span>Settings</span></button>
+        <div class="profile-row"><span class="avatar">S</span><span><b>SkyCast</b><small>Weather, reimagined</small></span><i data-lucide="ellipsis"></i></div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="mobile-brand"><span class="brand-mark"><i data-lucide="cloud-sun"></i></span>skycast<span class="brand-dot">.</span></div>
+          <div class="breadcrumb"><span>Weather</span><i data-lucide="chevron-right"></i><b id="breadcrumb-city">Overview</b></div>
+          <div class="top-actions">
+            <div class="search-wrap">
+              <i data-lucide="search"></i>
+              <input id="city-search" type="search" placeholder="Search any city..." autocomplete="off" aria-label="Search a city" />
+              <kbd>⌘ K</kbd>
+              <div id="search-results" class="search-results" role="listbox"></div>
+            </div>
+            <button class="icon-button unit-toggle" id="unit-toggle" aria-label="Switch temperature units">°C</button>
+            <button class="icon-button theme-toggle" id="theme-toggle" aria-label="Toggle light mode"><i data-lucide="sun"></i></button>
+            <button class="icon-button location-button" id="location-button" aria-label="Use my location"><i data-lucide="locate-fixed"></i></button>
+          </div>
+        </header>
+
+        <div id="notice" class="notice" role="status"></div>
+        <section id="home-view" class="view active-view">
+          <div class="welcome-row">
+            <div><p class="eyebrow" id="today-date">YOUR DAILY WEATHER</p><h1>Good morning<span class="heading-period">.</span></h1><p class="welcome-sub">Here's what's happening with the sky today.</p></div>
+            <div class="welcome-right"><span class="live-dot"></span><span>LIVE WEATHER</span><button class="share-button" id="share-button"><i data-lucide="share-2"></i> Share</button></div>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="card hero-card" id="hero-card">
+              <div class="hero-top"><div class="location-line"><i data-lucide="map-pin"></i><span id="current-location">Loading location...</span><span class="location-country" id="country-code"></span></div><button class="favorite-button" id="favorite-button" aria-label="Add to favorites"><i data-lucide="heart"></i></button></div>
+              <div class="hero-main">
+                <div class="hero-weather"><div class="temperature" id="temperature">--<sup>°</sup></div><div class="condition" id="condition">Loading your forecast</div><div class="feels-like">Feels like <b id="feels-like">--°</b></div></div>
+                <div class="weather-art" id="weather-art"><div class="sun-halo"></div><i data-lucide="cloud-sun"></i></div>
+              </div>
+              <div class="hero-divider"></div>
+              <div class="hero-footer"><div class="hi-lo"><i data-lucide="thermometer"></i><span>H:<b id="high-temp">--°</b></span><span>L:<b id="low-temp">--°</b></span></div><div class="sun-times"><span><i data-lucide="sunrise"></i><b id="sunrise">--:--</b></span><span><i data-lucide="sunset"></i><b id="sunset">--:--</b></span></div></div>
+            </section>
+
+            <section class="card highlight-card">
+              <div class="card-heading"><div><p class="eyebrow">YOUR DAY AT A GLANCE</p><h2>Today's highlights</h2></div><span class="heading-icon"><i data-lucide="sparkles"></i></span></div>
+              <div class="highlights-grid">
+                <div class="metric-card"><div class="metric-label"><i data-lucide="droplets"></i> Humidity</div><div class="metric-value" id="humidity">--<small>%</small></div><div class="metric-foot" id="humidity-foot">Air moisture</div><div class="mini-meter"><span id="humidity-meter"></span></div></div>
+                <div class="metric-card"><div class="metric-label"><i data-lucide="wind"></i> Wind</div><div class="metric-value" id="wind-speed">--<small> km/h</small></div><div class="metric-foot" id="wind-direction">Breeze</div><div class="wind-compass"><span id="wind-arrow">↑</span><i data-lucide="navigation"></i></div></div>
+                <div class="metric-card"><div class="metric-label"><i data-lucide="gauge"></i> Pressure</div><div class="metric-value" id="pressure">--<small> hPa</small></div><div class="metric-foot">Atmospheric pressure</div><div class="pressure-line"><span></span></div></div>
+                <div class="metric-card"><div class="metric-label"><i data-lucide="eye"></i> Visibility</div><div class="metric-value" id="visibility">--<small> km</small></div><div class="metric-foot" id="visibility-foot">Clear skies ahead</div><div class="visibility-dots">•••••</div></div>
+              </div>
+            </section>
+
+            <section class="card forecast-card hourly-card" id="hourly-section">
+              <div class="card-heading"><div><p class="eyebrow">PLAN YOUR DAY</p><h2>Hourly forecast</h2></div><button class="text-button" data-open-view="hourly">Next 24 hours <i data-lucide="arrow-up-right"></i></button></div>
+              <div class="hourly-list" id="hourly-list"><div class="loading-row">Gathering your hourly forecast...</div></div>
+              <div class="chart-wrap"><div class="chart-label"><span>TEMPERATURE</span><span>RAIN CHANCE</span></div><canvas id="temperature-chart" aria-label="Temperature forecast chart"></canvas></div>
+            </section>
+
+            <section class="card forecast-card weekly-card" id="weekly-section">
+              <div class="card-heading"><div><p class="eyebrow">THE WEEK AHEAD</p><h2>5-day forecast</h2></div><button class="subtle-icon" id="weekly-arrow" aria-label="View five-day forecast"><i data-lucide="arrow-up-right"></i></button></div>
+              <div class="weekly-list" id="weekly-list"><div class="loading-row">Looking ahead...</div></div>
+              <div class="recommendation"><div class="recommend-icon"><i data-lucide="sparkles"></i></div><div><b id="tip-title">A little weather wisdom</b><p id="weather-tip">Your personalized forecast is on its way.</p></div></div>
+            </section>
+
+            <section class="card air-card" id="air-section">
+              <div class="card-heading"><div><p class="eyebrow">BREATHE EASY</p><h2>Air quality</h2></div><span class="air-icon"><i data-lucide="wind"></i></span></div>
+              <div class="air-main"><div class="air-number" id="aqi-number">--</div><div><b id="aqi-label">Checking the air</b><small id="aqi-description">Live local air quality</small></div><span class="air-good-dot"></span></div>
+              <div class="air-scale"><span>Good</span><span>Fair</span><span>Moderate</span><span>Poor</span><span>Very poor</span><div class="air-scale-track"><i id="aqi-marker"></i></div></div>
+              <div class="air-pollutants" id="air-pollutants"><span>PM2.5 <b>--</b></span><span>PM10 <b>--</b></span><span>NO₂ <b>--</b></span></div>
+              <button class="air-details" data-open-view="air">View air quality details <i data-lucide="arrow-right"></i></button>
+            </section>
+          </div>
+          <footer class="footer"><span>SkyCast <span class="brand-dot">·</span> See beyond the clouds.</span><span>Weather data by OpenWeather</span></footer>
+        </section>
+
+        <section id="detail-view" class="view detail-view">
+          <div class="detail-heading"><p class="eyebrow" id="detail-eyebrow">YOUR WEATHER</p><h1 id="detail-title">Forecast</h1><p id="detail-description">A closer look at your local weather.</p></div>
+          <div class="detail-content" id="detail-content"></div>
+        </section>
+      </main>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
